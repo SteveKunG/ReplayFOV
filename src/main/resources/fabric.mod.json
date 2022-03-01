@@ -1,0 +1,20 @@
+{
+    "schemaVersion": 1,
+    "id": "replayfov",
+    "version": "${version}",
+    "name": "ReplayFov",
+    "description": "Add FOV keyframe to ReplayMod",
+    "authors": [
+        "SteveKunG"
+    ],
+    "license": "ARR",
+    "environment": "client",
+    "mixins": [
+        "replayfov.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.12.12",
+        "replaymod": "*",
+        "minecraft": ">=1.18"
+    }
+}

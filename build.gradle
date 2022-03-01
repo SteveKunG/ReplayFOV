@@ -1,0 +1,71 @@
+plugins {
+    id "fabric-loom" version "0.11-SNAPSHOT"
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+loom {
+    mixin {
+        defaultRefmapName = "mixins.replayfov.refmap.json"
+    }
+
+    runs {
+        client {
+            programArgs "--username", "${username}", "--uuid", "${uuid}"
+            vmArg "-Dmixin.debug.export=true"
+            vmArg "-Dmixin.hotSwap=true"
+        }
+    }
+}
+
+repositories {
+    maven {
+        name "TerraformersMC"
+        url "https://maven.terraformersmc.com/releases"
+    }
+    ivy {
+        setName("ReplayMod")
+        setUrl("https://minio.replaymod.com/replaymod/")
+        patternLayout { artifact("[artifact]-[revision](-[classifier])(.[ext])") }
+        metadataSources { artifact() }
+        content { includeGroup("com.replaymod") }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "com.replaymod:replaymod-1.18.1:2.6.3"
+    implementation(include("com.udojava:EvalEx:2.7"))
+
+    modImplementation ("com.terraformersmc:modmenu:${mod_menu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+}
+
+String fileName = "${archives_base_name}-mc${minecraft_version}"
+
+remapJar {
+    archiveVersion = "v${project.version}"
+    archiveBaseName = fileName
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 17
+}
