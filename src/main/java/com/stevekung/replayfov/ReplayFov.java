@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import javax.annotation.Nonnull;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -37,7 +37,7 @@ public class ReplayFov
         }
 
         @Override
-        public void applyToGame(Triple<Float, Float, Float> value, @NonNull Object replayHandler)
+        public void applyToGame(Triple<Float, Float, Float> value, @Nonnull Object replayHandler)
         {
             var handler = (ReplayHandler) replayHandler;
             handler.spectateCamera();
