@@ -12,7 +12,6 @@ import com.replaymod.pathing.properties.CameraProperties;
 import com.replaymod.pathing.properties.SpectatorProperty;
 import com.replaymod.simplepathing.ReplayModSimplePathing;
 import com.replaymod.simplepathing.SPTimeline;
-import com.replaymod.simplepathing.SPTimeline.SPPath;
 import com.replaymod.simplepathing.gui.GuiPathing;
 import com.stevekung.replayfov.FovPositionKeyframe;
 import com.stevekung.replayfov.GuiEditKeyframe;
@@ -29,7 +28,7 @@ public abstract class MixinGuiPathing
      * @reason Use new GuiEditKeyframe
      */
     @Overwrite
-    public void openEditKeyframePopup(SPPath path, long time)
+    public void openEditKeyframePopup(SPTimeline.SPPath path, long time)
     {
         if (!((GuiPathing) (Object) this).loadEntityTracker(() -> this.openEditKeyframePopup(path, time)))
         {

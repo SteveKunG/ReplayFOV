@@ -393,7 +393,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         {
             @SuppressWarnings("rawtypes")
             private SettingsPanel settingsPanel;
-            private GuiDropdownMenu<InterpolatorType> dropdown = new GuiDropdownMenu<>();
+            private GuiDropdownMenu<InterpolatorType> dropdown;
 
             @SuppressWarnings("unchecked")
             public InterpolationPanel()

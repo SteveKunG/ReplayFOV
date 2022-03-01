@@ -66,7 +66,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
      * @reason Use new FOV arg
      */
     @Overwrite
-    public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch,float roll)
+    public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll)
     {
         return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov);
     }

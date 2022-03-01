@@ -9,14 +9,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import com.replaymod.lib.de.johni0702.minecraft.gui.element.advanced.AbstractGuiTimeline;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.ReadablePoint;
 import com.replaymod.replay.gui.overlay.GuiEditMarkerPopup;
 import com.replaymod.replay.gui.overlay.GuiMarkerTimeline;
 import com.replaymod.replaystudio.data.Marker;
 
 @Mixin(value = GuiMarkerTimeline.class, remap = false)
-public abstract class MixinGuiMarkerTimeline extends AbstractGuiTimeline<GuiMarkerTimeline>
+public abstract class MixinGuiMarkerTimeline
 {
     @Shadow
     Set<Marker> markers;
@@ -33,7 +32,7 @@ public abstract class MixinGuiMarkerTimeline extends AbstractGuiTimeline<GuiMark
     {
         var marker = this.getMarkerAt(position.getX(), position.getY());
 
-        new GuiEditMarkerPopup(this.getContainer(), marker, updatedMarker ->
+        new GuiEditMarkerPopup(((GuiMarkerTimeline)(Object)this).getContainer(), marker, updatedMarker ->
         {
             this.markers.remove(marker);
             this.markers.add(updatedMarker);
