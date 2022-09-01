@@ -39,6 +39,7 @@ import com.replaymod.simplepathing.properties.ExplicitInterpolationProperty;
 import com.udojava.evalex.Expression;
 
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.util.Mth;
 
 public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends AbstractGuiPopup<T> implements Typeable
 {
@@ -363,7 +364,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var roll = this.rollField.setPrecision(11).getFloat();
             var fov = this.fovField.setPrecision(11).getFloat();
             var timeline = this.guiPathing.getMod().getCurrentTimeline();
-            var positionChange = ((FovPositionKeyframe) timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, (float) (1 / Math.tan(Math.toRadians(fov))));
+            var positionChange = ((FovPositionKeyframe) timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, Mth.floor((1 / Math.tan(Math.toRadians(fov)))));
 
             if (this.interpolationPanel.getSettingsPanel() == null)
             {

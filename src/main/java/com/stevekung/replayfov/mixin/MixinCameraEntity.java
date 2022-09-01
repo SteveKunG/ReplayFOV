@@ -10,9 +10,9 @@ import com.stevekung.replayfov.FovCamera;
 public class MixinCameraEntity implements FovCamera
 {
     @Override
-    public void setFov(Float fov)
+    public void setFov(Integer fov)
     {
-        MCVer.getMinecraft().options.fov = fov;
+        MCVer.getMinecraft().options.fov().set(fov);
         MCVer.getMinecraft().levelRenderer.needsUpdate();
     }
 }

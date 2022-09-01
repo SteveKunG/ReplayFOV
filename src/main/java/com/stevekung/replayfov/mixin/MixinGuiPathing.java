@@ -54,6 +54,6 @@ public abstract class MixinGuiPathing
     @Redirect(method = "toggleKeyframe", at = @At(value = "INVOKE", target = "com/replaymod/simplepathing/SPTimeline.addPositionKeyframe(JDDDFFFI)V"))
     private void newMarkerPopup(SPTimeline timeline, long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        ((FovPositionKeyframe)timeline).addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
+        ((FovPositionKeyframe)timeline).addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, MCVer.getMinecraft().options.fov().get(), spectated);
     }
 }

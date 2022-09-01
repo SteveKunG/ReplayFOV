@@ -6,5 +6,5 @@ public interface FovCamera
      * Sets the camera fov to the specified fov
      * @param fov The fov to set
      */
-    void setFov(Float fov);
+    void setFov(Integer fov);
 }
