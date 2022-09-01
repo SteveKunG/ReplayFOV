@@ -70,7 +70,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             .setLayout(new HorizontalLayout(HorizontalLayout.Alignment.RIGHT).setSpacing(3))
             .addElements(new HorizontalLayout.Data(0.5), new GuiLabel().setI18nText("replaymod.gui.editkeyframe.timelineposition"), this.timeMinField, new GuiLabel()
                     .setI18nText("replaymod.gui.minutes"), this.timeSecField, new GuiLabel()
-                    .setI18nText("replaymod.gui.seconds"), this.timeMSecField, new GuiLabel().setI18nText("replaymod.gui.milliseconds"));
+                            .setI18nText("replaymod.gui.seconds"), this.timeMSecField, new GuiLabel().setI18nText("replaymod.gui.milliseconds"));
 
     public final GuiButton saveButton = new GuiButton().setSize(150, 20).setI18nLabel("replaymod.gui.save");
 
@@ -84,7 +84,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
     {
         this.setBackgroundColor(Colors.DARK_TRANSPARENT);
         this.popup.setLayout(new VerticalLayout().setSpacing(10))
-        .addElements(new VerticalLayout.Data(0.5, false), this.title, this.inputs, this.timePanel, this.buttons);
+                .addElements(new VerticalLayout.Data(0.5, false), this.title, this.inputs, this.timePanel, this.buttons);
     }
 
     protected boolean canSave()
@@ -94,7 +94,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var timeMin = this.timeMinField.getDouble();
             var timeSec = this.timeSecField.getDouble();
             var timeMSec = this.timeMSecField.getDouble();
-            var newTime = (long) ((timeMin * 60 + timeSec) * 1000 + timeMSec);
+            var newTime = (long)((timeMin * 60 + timeSec) * 1000 + timeMSec);
 
             if (newTime < 0 || newTime > this.guiPathing.timeline.getLength())
             {
@@ -128,7 +128,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var timeSec = this.timeSecField.getDouble();
             var timeMSec = this.timeMSecField.getDouble();
             var change = this.save();
-            var newTime = (long) ((timeMin * 60 + timeSec) * 1000 + timeMSec);
+            var newTime = (long)((timeMin * 60 + timeSec) * 1000 + timeMSec);
 
             if (newTime != time)
             {
@@ -193,11 +193,11 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
 
         {
             this.inputs.setLayout(new HorizontalLayout(HorizontalLayout.Alignment.RIGHT).setSpacing(3))
-            .addElements(new HorizontalLayout.Data(0.5), new GuiLabel()
-                    .setI18nText("replaymod.gui.editkeyframe.timestamp"), this.timestampMinField, new GuiLabel()
-                    .setI18nText("replaymod.gui.minutes"), this.timestampSecField, new GuiLabel()
-                    .setI18nText("replaymod.gui.seconds"), this.timestampMSecField, new GuiLabel()
-                    .setI18nText("replaymod.gui.milliseconds"));
+                    .addElements(new HorizontalLayout.Data(0.5), new GuiLabel()
+                            .setI18nText("replaymod.gui.editkeyframe.timestamp"), this.timestampMinField, new GuiLabel()
+                                    .setI18nText("replaymod.gui.minutes"), this.timestampSecField, new GuiLabel()
+                                            .setI18nText("replaymod.gui.seconds"), this.timestampMSecField, new GuiLabel()
+                                                    .setI18nText("replaymod.gui.milliseconds"));
         }
 
         public Time(GuiPathing gui, SPPath path, long keyframe)
@@ -228,7 +228,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var timeMin = this.timestampMinField.getDouble();
             var timeSec = this.timestampSecField.getDouble();
             var timeMSec = this.timestampMSecField.getDouble();
-            var time = (int) ((timeMin * 60 + timeSec) * 1000 + timeMSec);
+            var time = (int)((timeMin * 60 + timeSec) * 1000 + timeMSec);
             return this.guiPathing.getMod().getCurrentTimeline().updateTimeKeyframe(this.keyframe.getTime(), time);
         }
 
@@ -240,7 +240,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                 var timeMin = this.timestampMinField.getDouble();
                 var timeSec = this.timestampSecField.getDouble();
                 var timeMSec = this.timestampMSecField.getDouble();
-                var time = (long) ((timeMin * 60 + timeSec) * 1000 + timeMSec);
+                var time = (long)((timeMin * 60 + timeSec) * 1000 + timeMSec);
 
                 if (time < 0)
                 { // TODO add check to make sure time isn't longer than the replay
@@ -282,11 +282,11 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                     .setLayout(new GridLayout().setCellsEqualSize(false).setColumns(4).setSpacingX(3).setSpacingY(5))
                     .addElements(new GridLayout.Data(1, 0.5), new GuiLabel().setI18nText("replaymod.gui.editkeyframe.xpos"), this.xField, new GuiLabel()
                             .setI18nText("replaymod.gui.editkeyframe.camyaw"), this.yawField, new GuiLabel()
-                            .setI18nText("replaymod.gui.editkeyframe.ypos"), this.yField, new GuiLabel()
-                            .setI18nText("replaymod.gui.editkeyframe.campitch"), this.pitchField, new GuiLabel()
-                            .setI18nText("replaymod.gui.editkeyframe.zpos"), this.zField, new GuiLabel()
-                            .setI18nText("replaymod.gui.editkeyframe.camroll"), this.rollField, new GuiLabel()
-                            .setI18nText("replaymod.gui.editkeyframe.fov"), this.fovField);
+                                    .setI18nText("replaymod.gui.editkeyframe.ypos"), this.yField, new GuiLabel()
+                                            .setI18nText("replaymod.gui.editkeyframe.campitch"), this.pitchField, new GuiLabel()
+                                                    .setI18nText("replaymod.gui.editkeyframe.zpos"), this.zField, new GuiLabel()
+                                                            .setI18nText("replaymod.gui.editkeyframe.camroll"), this.rollField, new GuiLabel()
+                                                                    .setI18nText("replaymod.gui.editkeyframe.fov"), this.fovField);
 
             this.inputs.setLayout(new VerticalLayout().setSpacing(10)).addElements(new VerticalLayout.Data(0.5, false), positionInputs, this.interpolationPanel);
         }
@@ -343,7 +343,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         {
             if (this.xField.setPrecision(14).isExpressionValid() && this.yField.setPrecision(14).isExpressionValid() && this.zField.setPrecision(14)
                     .isExpressionValid() && this.yawField.setPrecision(11).isExpressionValid() && this.pitchField.setPrecision(11)
-                    .isExpressionValid() && this.rollField.setPrecision(11).isExpressionValid() && this.fovField.setPrecision(11).isExpressionValid())
+                            .isExpressionValid() && this.rollField.setPrecision(11).isExpressionValid() && this.fovField.setPrecision(11).isExpressionValid())
             {
                 return super.canSave();
             }
@@ -364,7 +364,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var roll = this.rollField.setPrecision(11).getFloat();
             var fov = this.fovField.setPrecision(11).getFloat();
             var timeline = this.guiPathing.getMod().getCurrentTimeline();
-            var positionChange = ((FovPositionKeyframe) timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, Mth.floor((1 / Math.tan(Math.toRadians(fov)))));
+            var positionChange = ((FovPositionKeyframe)timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, Mth.floor(1 / Math.tan(Math.toRadians(fov))));
 
             if (this.interpolationPanel.getSettingsPanel() == null)
             {
@@ -394,7 +394,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         {
             @SuppressWarnings("rawtypes")
             private SettingsPanel settingsPanel;
-            private GuiDropdownMenu<InterpolatorType> dropdown;
+            private final GuiDropdownMenu<InterpolatorType> dropdown;
 
             @SuppressWarnings("unchecked")
             public InterpolationPanel()
@@ -477,9 +477,8 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             {
                 if (interpolatorType == InterpolatorType.DEFAULT || interpolatorType == null)
                 {
-                    var defaultType = InterpolatorType
+                    return InterpolatorType
                             .fromString(Position.this.guiPathing.getMod().getCore().getSettingsRegistry().get(Setting.DEFAULT_INTERPOLATION));
-                    return defaultType;
                 }
                 return interpolatorType;
             }
@@ -537,8 +536,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             {
                 @Override
                 public void loadSettings(CubicSplineInterpolator interpolator)
-                {
-                }
+                {}
 
                 @Override
                 public CubicSplineInterpolator createInterpolator()
@@ -557,8 +555,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             {
                 @Override
                 public void loadSettings(LinearInterpolator interpolator)
-                {
-                }
+                {}
 
                 @Override
                 public LinearInterpolator createInterpolator()

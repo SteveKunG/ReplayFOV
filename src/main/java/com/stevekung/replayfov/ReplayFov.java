@@ -41,7 +41,7 @@ public class ReplayFov
         @Override
         public void applyToGame(Triple<Float, Float, Float> value, @Nonnull Object replayHandler)
         {
-            var handler = (ReplayHandler) replayHandler;
+            var handler = (ReplayHandler)replayHandler;
             handler.spectateCamera();
             var cameraEntity = handler.getCameraEntity();
 
@@ -74,7 +74,7 @@ public class ReplayFov
 
             try
             {
-                return Triple.of((float) reader.nextDouble(), (float) reader.nextDouble(), (float) reader.nextDouble());
+                return Triple.of((float)reader.nextDouble(), (float)reader.nextDouble(), (float)reader.nextDouble());
             }
             finally
             {

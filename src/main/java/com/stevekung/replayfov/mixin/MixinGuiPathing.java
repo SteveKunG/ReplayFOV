@@ -30,7 +30,7 @@ public abstract class MixinGuiPathing
     @Overwrite
     public void openEditKeyframePopup(SPTimeline.SPPath path, long time)
     {
-        if (!((GuiPathing) (Object) this).loadEntityTracker(() -> this.openEditKeyframePopup(path, time)))
+        if (!((GuiPathing)(Object)this).loadEntityTracker(() -> this.openEditKeyframePopup(path, time)))
         {
             return;
         }
@@ -39,15 +39,15 @@ public abstract class MixinGuiPathing
 
         if (keyframe.getProperties().contains(SpectatorProperty.PROPERTY))
         {
-            new GuiEditKeyframe.Spectator((GuiPathing) (Object) this, path, keyframe.getTime()).open();
+            new GuiEditKeyframe.Spectator((GuiPathing)(Object)this, path, keyframe.getTime()).open();
         }
         else if (keyframe.getProperties().contains(CameraProperties.POSITION))
         {
-            new GuiEditKeyframe.Position((GuiPathing) (Object) this, path, keyframe.getTime()).open();
+            new GuiEditKeyframe.Position((GuiPathing)(Object)this, path, keyframe.getTime()).open();
         }
         else
         {
-            new GuiEditKeyframe.Time((GuiPathing) (Object) this, path, keyframe.getTime()).open();
+            new GuiEditKeyframe.Time((GuiPathing)(Object)this, path, keyframe.getTime()).open();
         }
     }
 

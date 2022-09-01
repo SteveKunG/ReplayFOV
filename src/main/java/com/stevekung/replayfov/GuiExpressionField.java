@@ -83,12 +83,12 @@ public class GuiExpressionField extends GuiTextField
     @Override
     public GuiExpressionField setSize(int width, int height)
     {
-        return (GuiExpressionField) super.setSize(width, height);
+        return (GuiExpressionField)super.setSize(width, height);
     }
 
     @Override
     public GuiExpressionField onTextChanged(Consumer<String> textChanged)
     {
-        return (GuiExpressionField) super.onTextChanged(textChanged);
+        return (GuiExpressionField)super.onTextChanged(textChanged);
     }
 }

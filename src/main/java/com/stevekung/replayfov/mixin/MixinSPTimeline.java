@@ -101,7 +101,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
         var builder = UpdateKeyframeProperties.create(path, keyframe);
         builder.setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ));
         builder.setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll));
-        builder.setValue(ReplayFov.FOV, Triple.of((float) (1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
+        builder.setValue(ReplayFov.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
 
         if (spectated != -1)
         {
@@ -178,7 +178,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
                     changes.add(UpdateKeyframeProperties.create(this.positionPath, keyframe)
                             .setValue(CameraProperties.POSITION, Triple.of(expected.getX(), expected.getY(), expected.getZ()))
                             .setValue(CameraProperties.ROTATION, Triple.of(expected.getYaw(), expected.getPitch(), 0f))
-                            .setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get())), 0f, 0f)).done());
+                            .setValue(ReplayFov.FOV, Triple.of((float)Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get())), 0f, 0f)).done());
                 }
             }
         }
