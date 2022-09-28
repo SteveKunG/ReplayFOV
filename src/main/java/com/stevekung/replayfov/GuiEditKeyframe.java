@@ -39,7 +39,6 @@ import com.replaymod.simplepathing.properties.ExplicitInterpolationProperty;
 import com.udojava.evalex.Expression;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.util.Mth;
 
 public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends AbstractGuiPopup<T> implements Typeable
 {
@@ -309,22 +308,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                 this.rollField.setText(this.df.format(rot.getRight()));
             });
 
-            this.keyframe.getValue(ReplayFov.FOV).ifPresent(val ->
-            {
-                double fov;
-
-                if (val.getLeft() < 0)
-                {
-                    fov = Math.toDegrees(Math.atan(1 / val.getLeft()) + Math.PI);
-                }
-                else
-                {
-                    fov = Math.toDegrees(Math.atan(1 / val.getLeft()));
-                }
-
-                this.fovField.setText(this.df.format(fov));
-            });
-
+            this.keyframe.getValue(ReplayFov.FOV).ifPresent(val -> this.fovField.setText(this.df.format(val.getLeft())));
             this.xField.onTextChanged(updateSaveButtonState);
             this.yField.onTextChanged(updateSaveButtonState);
             this.zField.onTextChanged(updateSaveButtonState);
@@ -362,9 +346,9 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var yaw = this.yawField.setPrecision(11).getFloat();
             var pitch = this.pitchField.setPrecision(11).getFloat();
             var roll = this.rollField.setPrecision(11).getFloat();
-            var fov = this.fovField.setPrecision(11).getFloat();
+            var fov = this.fovField.setPrecision(11).getInt();
             var timeline = this.guiPathing.getMod().getCurrentTimeline();
-            var positionChange = ((FovPositionKeyframe)timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, Mth.floor(1 / Math.tan(Math.toRadians(fov))));
+            var positionChange = ((FovPositionKeyframe)timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, (int)fov);
 
             if (this.interpolationPanel.getSettingsPanel() == null)
             {

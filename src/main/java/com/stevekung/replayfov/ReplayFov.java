@@ -15,8 +15,6 @@ import com.replaymod.replaystudio.pathing.property.AbstractProperty;
 import com.replaymod.replaystudio.pathing.property.PropertyPart;
 import com.replaymod.replaystudio.pathing.property.PropertyParts;
 
-import net.minecraft.util.Mth;
-
 public class ReplayFov
 {
     public static final Fov FOV = new Fov();
@@ -47,17 +45,7 @@ public class ReplayFov
 
             if (cameraEntity != null)
             {
-                double fov;
-
-                if (value.getLeft() < 0)
-                {
-                    fov = Math.toDegrees(Math.atan(1 / value.getLeft()) + Math.PI);
-                }
-                else
-                {
-                    fov = Math.toDegrees(Math.atan(1 / value.getLeft()));
-                }
-                ((FovCamera)cameraEntity).setFov(Mth.floor(fov));
+                ((FovCamera)cameraEntity).setFov(value.getLeft().intValue());
             }
         }
 
