@@ -3,12 +3,12 @@ package com.stevekung.replayfov;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
-import com.replaymod.lib.de.johni0702.minecraft.gui.element.GuiTextField;
+import com.replaymod.lib.de.johni0702.minecraft.gui.element.AbstractGuiTextField;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.Consumer;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.ReadableColor;
 import com.udojava.evalex.Expression;
 
-public class GuiExpressionField extends GuiTextField
+public class GuiExpressionField extends AbstractGuiTextField<GuiExpressionField>
 {
     private Boolean expressionValid = null;
     private MathContext mathContext = new MathContext(20);
@@ -83,12 +83,18 @@ public class GuiExpressionField extends GuiTextField
     @Override
     public GuiExpressionField setSize(int width, int height)
     {
-        return (GuiExpressionField)super.setSize(width, height);
+        return super.setSize(width, height);
     }
 
     @Override
     public GuiExpressionField onTextChanged(Consumer<String> textChanged)
     {
-        return (GuiExpressionField)super.onTextChanged(textChanged);
+        return super.onTextChanged(textChanged);
+    }
+
+    @Override
+    protected GuiExpressionField getThis()
+    {
+        return this;
     }
 }
