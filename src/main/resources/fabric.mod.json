@@ -7,14 +7,14 @@
     "authors": [
         "SteveKunG"
     ],
-    "license": "ARR",
+    "license": "GPL-3.0-or-later",
     "environment": "client",
     "mixins": [
         "replayfov.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.12.12",
+        "fabricloader": ">=0.14",
         "replaymod": "*",
-        "minecraft": ">=1.17"
+        "minecraft": ">=1.19"
     }
 }
