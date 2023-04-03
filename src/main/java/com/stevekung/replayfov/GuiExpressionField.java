@@ -3,10 +3,13 @@ package com.stevekung.replayfov;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import com.ezylang.evalex.EvaluationException;
+import com.ezylang.evalex.Expression;
+import com.ezylang.evalex.config.ExpressionConfiguration;
+import com.ezylang.evalex.parser.ParseException;
 import com.replaymod.lib.de.johni0702.minecraft.gui.element.AbstractGuiTextField;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.Consumer;
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.ReadableColor;
-import com.udojava.evalex.Expression;
 
 public class GuiExpressionField extends AbstractGuiTextField<GuiExpressionField>
 {
@@ -24,11 +27,11 @@ public class GuiExpressionField extends AbstractGuiTextField<GuiExpressionField>
     {
         try
         {
-            this.getExpression().eval();
+            this.getExpression().evaluate();
             this.setTextColor(ReadableColor.WHITE);
             return this.expressionValid = true;
         }
-        catch (Expression.ExpressionException | ArithmeticException | NumberFormatException e)
+        catch (ArithmeticException | NumberFormatException | EvaluationException | ParseException e)
         {
             this.setTextColor(ReadableColor.RED);
             return this.expressionValid = false;
@@ -52,30 +55,30 @@ public class GuiExpressionField extends AbstractGuiTextField<GuiExpressionField>
 
     public Expression getExpression()
     {
-        return new Expression(this.getText(), this.mathContext);
+        return new Expression(this.getText(), ExpressionConfiguration.builder().mathContext(this.mathContext).build());
     }
 
-    public BigDecimal getBigDecimal() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+    public BigDecimal getBigDecimal() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
     {
-        return this.getExpression().eval();
+        return this.getExpression().evaluate().getNumberValue();
     }
 
-    public long getLong() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+    public long getLong() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
     {
         return this.getBigDecimal().longValue();
     }
 
-    public double getDouble() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+    public double getDouble() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
     {
         return this.getBigDecimal().doubleValue();
     }
 
-    public float getFloat() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+    public float getFloat() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
     {
         return this.getBigDecimal().floatValue();
     }
 
-    public int getInt() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+    public int getInt() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
     {
         return this.getBigDecimal().intValue();
     }

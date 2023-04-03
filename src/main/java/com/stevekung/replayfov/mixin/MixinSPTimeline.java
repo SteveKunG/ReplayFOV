@@ -58,7 +58,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     @Overwrite
     public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        this.addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, MCVer.getMinecraft().options.fov().get(), spectated);
+        this.addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov, spectated);
     }
 
     /**
@@ -68,11 +68,11 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     @Overwrite
     public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll)
     {
-        return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, MCVer.getMinecraft().options.fov().get());
+        return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov);
     }
 
     @Override
-    public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int fov)
+    public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov)
     {
         ReplayModSimplePathing.LOGGER.debug("Updating position keyframe at {} to pos {}/{}/{} rot {}/{}/{} fov {}", time, posX, posY, posZ, yaw, pitch, roll, fov);
         var keyframe = this.positionPath.getKeyframe(time);
@@ -82,14 +82,14 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
         var change = UpdateKeyframeProperties.create(this.positionPath, keyframe)
                 .setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ))
                 .setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll))
-                .setValue(ReplayFov.FOV, Triple.of((float)fov, (float)fov, (float)fov))
+                .setValue(ReplayFov.FOV, Triple.of(fov, fov, fov))
                 .done();
         change.apply(this.timeline);
         return change;
     }
 
     @Override
-    public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int fov, int spectated)
+    public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated)
     {
         ReplayModSimplePathing.LOGGER.debug("Adding position keyframe at {} pos {}/{}/{} rot {}/{}/{} fov {} entId {}", time, posX, posY, posZ, yaw, pitch, roll, fov, spectated);
         var path = this.positionPath;
@@ -101,7 +101,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
         var builder = UpdateKeyframeProperties.create(path, keyframe);
         builder.setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ));
         builder.setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll));
-        builder.setValue(ReplayFov.FOV, Triple.of((float)fov, 0f, 0f));
+        builder.setValue(ReplayFov.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
 
         if (spectated != -1)
         {
@@ -178,7 +178,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
                     changes.add(UpdateKeyframeProperties.create(this.positionPath, keyframe)
                             .setValue(CameraProperties.POSITION, Triple.of(expected.getX(), expected.getY(), expected.getZ()))
                             .setValue(CameraProperties.ROTATION, Triple.of(expected.getYaw(), expected.getPitch(), 0f))
-                            .setValue(ReplayFov.FOV, Triple.of((float)MCVer.getMinecraft().options.fov().get(), 0f, 0f)).done());
+                            .setValue(ReplayFov.FOV, Triple.of((float)Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get())), 0f, 0f)).done());
                 }
             }
         }

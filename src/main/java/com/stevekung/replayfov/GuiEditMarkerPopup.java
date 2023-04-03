@@ -3,6 +3,8 @@ package com.stevekung.replayfov;
 import java.text.DecimalFormat;
 import java.util.function.Consumer;
 
+import com.ezylang.evalex.EvaluationException;
+import com.ezylang.evalex.parser.ParseException;
 import com.google.common.base.Strings;
 import com.replaymod.core.versions.MCVer.Keyboard;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiContainer;
@@ -53,17 +55,24 @@ public class GuiEditMarkerPopup extends AbstractGuiPopup<GuiEditMarkerPopup> imp
         @Override
         public void run()
         {
-            var marker = new Marker();
-            marker.setName(Strings.emptyToNull(GuiEditMarkerPopup.this.nameField.getText()));
-            marker.setTime(GuiEditMarkerPopup.this.timeField.getInt());
-            marker.setX(GuiEditMarkerPopup.this.xField.getDouble());
-            marker.setY(GuiEditMarkerPopup.this.yField.getDouble());
-            marker.setZ(GuiEditMarkerPopup.this.zField.getDouble());
-            marker.setYaw(GuiEditMarkerPopup.this.yawField.getFloat());
-            marker.setPitch(GuiEditMarkerPopup.this.pitchField.getFloat());
-            marker.setRoll(GuiEditMarkerPopup.this.rollField.getFloat());
-            GuiEditMarkerPopup.this.onSave.accept(marker);
-            GuiEditMarkerPopup.this.close();
+            try
+            {
+                var marker = new Marker();
+                marker.setName(Strings.emptyToNull(GuiEditMarkerPopup.this.nameField.getText()));
+                marker.setTime(GuiEditMarkerPopup.this.timeField.getInt());
+                marker.setX(GuiEditMarkerPopup.this.xField.getDouble());
+                marker.setY(GuiEditMarkerPopup.this.yField.getDouble());
+                marker.setZ(GuiEditMarkerPopup.this.zField.getDouble());
+                marker.setYaw(GuiEditMarkerPopup.this.yawField.getFloat());
+                marker.setPitch(GuiEditMarkerPopup.this.pitchField.getFloat());
+                marker.setRoll(GuiEditMarkerPopup.this.rollField.getFloat());
+                GuiEditMarkerPopup.this.onSave.accept(marker);
+                GuiEditMarkerPopup.this.close();
+            }
+            catch (NumberFormatException | EvaluationException | ParseException | ArithmeticException e)
+            {
+                e.printStackTrace();
+            }
         }
     }).setSize(150, 20).setI18nLabel("replaymod.gui.save");
 
@@ -127,5 +136,11 @@ public class GuiEditMarkerPopup extends AbstractGuiPopup<GuiEditMarkerPopup> imp
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void open()
+    {
+        super.open();
     }
 }

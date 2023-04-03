@@ -1,5 +1,6 @@
 plugins {
-    id "fabric-loom" version "1.0-SNAPSHOT"
+    id "fabric-loom" version "1.1-SNAPSHOT"
+    id "io.github.juuxel.loom-quiltflower" version "1.8.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -17,10 +18,21 @@ loom {
     runs {
         client {
             programArgs "--username", "${username}", "--uuid", "${uuid}"
-            vmArg "-Dmixin.debug.export=true"
-            vmArg "-Dmixin.hotSwap=true"
+            property "mixin.debug.export", "true"
+            property "mixin.hotSwap", "true"
         }
     }
+}
+
+quiltflower {
+    preferences {
+        // Max line length before formatting
+        pll = 32767
+
+        // Indentation string
+        ind = "    "
+    }
+    quiltflowerVersion = "1.9.0"
 }
 
 repositories {
@@ -31,15 +43,36 @@ repositories {
         metadataSources { artifact() }
         content { includeGroup("com.replaymod") }
     }
+    maven {
+        name "TerraformersMC"
+        url "https://maven.terraformersmc.com/releases"
+        content {
+            includeGroup "com.terraformersmc"
+        }
+    }
+    maven {
+        name "ParchmentMC"
+        url "https://maven.parchmentmc.org"
+        content {
+            includeGroup "org.parchmentmc.data"
+        }
+    }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchmentmc_version}@zip")
+    }
+    modImplementation("com.terraformersmc:modmenu:${mod_menu_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+        exclude group: "net.fabricmc", module: "fabric-loader"
+    }
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modImplementation "com.replaymod:replaymod-${replay_version}"
-    implementation(include("com.udojava:EvalEx:2.7"))
+    implementation(include("com.ezylang:EvalEx:3.0.4"))
 }
 
 String fileName = "${archives_base_name}-mc${supported_mc}"

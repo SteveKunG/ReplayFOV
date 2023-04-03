@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import com.replaymod.lib.de.johni0702.minecraft.gui.utils.lwjgl.ReadablePoint;
-import com.replaymod.replay.gui.overlay.GuiEditMarkerPopup;
 import com.replaymod.replay.gui.overlay.GuiMarkerTimeline;
 import com.replaymod.replaystudio.data.Marker;
+import com.stevekung.replayfov.GuiEditMarkerPopup;
 
 @Mixin(value = GuiMarkerTimeline.class, remap = false)
 public abstract class MixinGuiMarkerTimeline
@@ -28,11 +28,11 @@ public abstract class MixinGuiMarkerTimeline
     abstract Marker getMarkerAt(int mouseX, int mouseY);
 
     @Redirect(method = "mouseClick", at = @At(value = "INVOKE", target = "com/replaymod/replay/gui/overlay/GuiEditMarkerPopup.open()V"))
-    private void newMarkerPopup(GuiEditMarkerPopup popup, ReadablePoint position, int button)
+    private void newMarkerPopup(com.replaymod.replay.gui.overlay.GuiEditMarkerPopup popup, ReadablePoint position, int button)
     {
         var marker = this.getMarkerAt(position.getX(), position.getY());
 
-        new GuiEditMarkerPopup(((GuiMarkerTimeline)(Object)this).getContainer(), marker, updatedMarker ->
+        new GuiEditMarkerPopup(GuiMarkerTimeline.class.cast(this).getContainer(), marker, updatedMarker ->
         {
             this.markers.remove(marker);
             this.markers.add(updatedMarker);

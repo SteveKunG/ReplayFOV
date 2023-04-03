@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.ezylang.evalex.EvaluationException;
+import com.ezylang.evalex.parser.ParseException;
 import com.replaymod.core.versions.MCVer.Keyboard;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.AbstractGuiContainer;
 import com.replaymod.lib.de.johni0702.minecraft.gui.container.GuiPanel;
@@ -36,7 +38,6 @@ import com.replaymod.simplepathing.SPTimeline.SPPath;
 import com.replaymod.simplepathing.Setting;
 import com.replaymod.simplepathing.gui.GuiPathing;
 import com.replaymod.simplepathing.properties.ExplicitInterpolationProperty;
-import com.udojava.evalex.Expression;
 
 import net.minecraft.client.resources.language.I18n;
 
@@ -101,7 +102,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             }
             return newTime == this.keyframe.getTime() || this.path.getKeyframe(newTime) == null;
         }
-        catch (Expression.ExpressionException | ArithmeticException | NumberFormatException e)
+        catch (EvaluationException | ParseException | ArithmeticException | NumberFormatException e)
         {
             return false;
         }
@@ -123,23 +124,30 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         this.title.setI18nText("replaymod.gui.editkeyframe.title." + type);
         this.saveButton.onClick(() ->
         {
-            var timeMin = this.timeMinField.getDouble();
-            var timeSec = this.timeSecField.getDouble();
-            var timeMSec = this.timeMSecField.getDouble();
-            var change = this.save();
-            var newTime = (long)((timeMin * 60 + timeSec) * 1000 + timeMSec);
-
-            if (newTime != time)
+            try
             {
-                change = CombinedChange.createFromApplied(change, gui.getMod().getCurrentTimeline().moveKeyframe(path, time, newTime));
+                var timeMin = this.timeMinField.getDouble();
+                var timeSec = this.timeSecField.getDouble();
+                var timeMSec = this.timeMSecField.getDouble();
+                var change = this.save();
+                var newTime = (long)((timeMin * 60 + timeSec) * 1000 + timeMSec);
 
-                if (gui.getMod().getSelectedPath() == path && gui.getMod().getSelectedTime() == time)
+                if (newTime != time)
                 {
-                    gui.getMod().setSelected(path, newTime);
+                    change = CombinedChange.createFromApplied(change, gui.getMod().getCurrentTimeline().moveKeyframe(path, time, newTime));
+
+                    if (gui.getMod().getSelectedPath() == path && gui.getMod().getSelectedTime() == time)
+                    {
+                        gui.getMod().setSelected(path, newTime);
+                    }
                 }
+                gui.getMod().getCurrentTimeline().getTimeline().pushChange(change);
+                this.close();
             }
-            gui.getMod().getCurrentTimeline().getTimeline().pushChange(change);
-            this.close();
+            catch (NumberFormatException | EvaluationException | ParseException | ArithmeticException e)
+            {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -160,7 +168,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         super.open();
     }
 
-    protected abstract Change save();
+    protected abstract Change save() throws ArithmeticException, NumberFormatException, EvaluationException, ParseException;
 
     public static class Spectator extends GuiEditKeyframe<Spectator>
     {
@@ -222,7 +230,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         }
 
         @Override
-        protected Change save() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+        protected Change save() throws EvaluationException, ParseException, ArithmeticException, NumberFormatException
         {
             var timeMin = this.timestampMinField.getDouble();
             var timeSec = this.timestampSecField.getDouble();
@@ -250,7 +258,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                     return super.canSave();
                 }
             }
-            catch (Expression.ExpressionException | ArithmeticException | NumberFormatException e)
+            catch (EvaluationException | ParseException | ArithmeticException | NumberFormatException e)
             {
                 return false;
             }
@@ -308,7 +316,21 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                 this.rollField.setText(this.df.format(rot.getRight()));
             });
 
-            this.keyframe.getValue(ReplayFov.FOV).ifPresent(val -> this.fovField.setText(this.df.format(val.getLeft())));
+            this.keyframe.getValue(ReplayFov.FOV).ifPresent(val ->
+            {
+                double fov;
+
+                if (val.getLeft() < 0)
+                {
+                    fov = Math.toDegrees(Math.atan(1 / val.getLeft()) + Math.PI);
+                }
+                else
+                {
+                    fov = Math.toDegrees(Math.atan(1 / val.getLeft()));
+                }
+
+                this.fovField.setText(this.df.format(fov));
+            });
             this.xField.onTextChanged(updateSaveButtonState);
             this.yField.onTextChanged(updateSaveButtonState);
             this.zField.onTextChanged(updateSaveButtonState);
@@ -338,7 +360,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
         }
 
         @Override
-        protected Change save() throws Expression.ExpressionException, ArithmeticException, NumberFormatException
+        protected Change save() throws ArithmeticException, NumberFormatException, EvaluationException, ParseException
         {
             var x = this.xField.setPrecision(14).getDouble();
             var y = this.yField.setPrecision(14).getDouble();
@@ -346,9 +368,9 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
             var yaw = this.yawField.setPrecision(11).getFloat();
             var pitch = this.pitchField.setPrecision(11).getFloat();
             var roll = this.rollField.setPrecision(11).getFloat();
-            var fov = this.fovField.setPrecision(11).getInt();
+            var fov = this.fovField.setPrecision(11).getFloat();
             var timeline = this.guiPathing.getMod().getCurrentTimeline();
-            var positionChange = ((FovPositionKeyframe)timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, (int)fov);
+            var positionChange = ((FovPositionKeyframe)timeline).updatePositionKeyframe(this.time, x, y, z, yaw, pitch, roll, (float)(1 / Math.tan(Math.toRadians(fov))));
 
             if (this.interpolationPanel.getSettingsPanel() == null)
             {
