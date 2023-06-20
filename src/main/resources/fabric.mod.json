@@ -18,8 +18,8 @@
         "replayfov.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=0.14",
+        "fabricloader": ">=0.14.21",
         "replaymod": "*",
-        "minecraft": ">=1.19.3"
+        "minecraft": ">=1.20"
     }
 }
