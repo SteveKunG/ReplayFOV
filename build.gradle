@@ -1,31 +1,44 @@
 plugins {
-    id "fabric-loom" version "1.2-SNAPSHOT"
-    id "io.github.juuxel.loom-quiltflower" version "1.10.0"
+    id "fabric-loom" version "1.5-SNAPSHOT"
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
-archivesBaseName = project.archives_base_name
+base {
+    archivesName = project.archives_base_name
+}
+
 version = project.mod_version
 group = project.maven_group
 
 loom {
+    def commonVmArgs = [
+            "-XX:+AllowEnhancedClassRedefinition",
+            "-XX:+IgnoreUnrecognizedVMOptions"
+    ]
+    def commonProperties = ["mixin.debug.export": "true", "mixin.hotSwap": "true"]
+
+    decompilers {
+        vineflower {
+            options.put("pll", "32767")
+            options.put("ind", "    ")
+        }
+    }
+
     mixin {
         defaultRefmapName = "mixins.replayfov.refmap.json"
     }
 
     runs {
         client {
-            programArgs "--username", "${username}", "--uuid", "${uuid}"
-            property "mixin.debug.export", "true"
-            property "mixin.hotSwap", "true"
+            properties commonProperties
+            vmArgs commonVmArgs
+            property "devauth.configDir", "${devauth_dir}"
         }
     }
-}
-
-quiltflower {
-    quiltflowerVersion = "1.9.0"
 }
 
 repositories {
@@ -86,4 +99,15 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
     it.options.release = 17
+}
+
+afterEvaluate {
+    loom {
+        runs {
+            configureEach {
+                def mixinJarFile = configurations.compileClasspath.files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
+                vmArg("-javaagent:$mixinJarFile")
+            }
+        }
+    }
 }

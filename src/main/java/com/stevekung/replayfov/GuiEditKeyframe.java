@@ -316,7 +316,7 @@ public abstract class GuiEditKeyframe<T extends GuiEditKeyframe<T>> extends Abst
                 this.rollField.setText(this.df.format(rot.getRight()));
             });
 
-            this.keyframe.getValue(ReplayFov.FOV).ifPresent(val ->
+            this.keyframe.getValue(ReplayFOV.FOV).ifPresent(val ->
             {
                 double fov;
 

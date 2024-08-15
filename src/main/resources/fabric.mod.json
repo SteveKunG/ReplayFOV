@@ -11,7 +11,7 @@
     "environment": "client",
     "entrypoints": {
         "client": [
-            "com.stevekung.replayfov.ReplayFov"
+            "com.stevekung.replayfov.ReplayFOV"
         ]
     },
     "mixins": [

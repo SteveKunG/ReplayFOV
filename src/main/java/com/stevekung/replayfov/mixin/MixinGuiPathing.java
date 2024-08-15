@@ -14,7 +14,7 @@ import com.replaymod.simplepathing.SPTimeline;
 import com.replaymod.simplepathing.gui.GuiPathing;
 import com.stevekung.replayfov.FovPositionKeyframe;
 import com.stevekung.replayfov.GuiEditKeyframe;
-import com.stevekung.replayfov.ReplayFov;
+import com.stevekung.replayfov.ReplayFOV;
 
 import net.minecraft.client.Minecraft;
 
@@ -58,6 +58,6 @@ public abstract class MixinGuiPathing
     @Redirect(method = "toggleKeyframe", at = @At(value = "INVOKE", target = "com/replaymod/simplepathing/SPTimeline.addPositionKeyframe(JDDDFFFI)V"))
     private void newMarkerPopup(SPTimeline timeline, long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        ((FovPositionKeyframe)timeline).addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov == null ? Minecraft.getInstance().options.fov().get() : ReplayFov.fov, spectated);
+        ((FovPositionKeyframe)timeline).addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFOV.fov == null ? Minecraft.getInstance().options.fov().get() : ReplayFOV.fov, spectated);
     }
 }

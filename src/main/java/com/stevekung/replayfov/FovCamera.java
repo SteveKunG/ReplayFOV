@@ -3,10 +3,9 @@ package com.stevekung.replayfov;
 public interface FovCamera
 {
     /**
-     * Sets the camera fov to the specified fov
+     * Sets the Camera FOV to the specified FOV
      *
-     * @param fov
-     *            The fov to set
+     * @param fov The FOV to set
      */
-    void setFov(Float fov);
+    void setFOV(Float fov);
 }

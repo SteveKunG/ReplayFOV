@@ -22,7 +22,7 @@ import com.replaymod.replaystudio.pathing.property.PropertyParts;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
-public class ReplayFov implements ClientModInitializer
+public class ReplayFOV implements ClientModInitializer
 {
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -66,7 +66,7 @@ public class ReplayFov implements ClientModInitializer
                 {
                     fov = Math.toDegrees(Math.atan(1 / value.getLeft()));
                 }
-                ((FovCamera)cameraEntity).setFov((float)fov);
+                ((FovCamera)cameraEntity).setFOV((float)fov);
             }
         }
 

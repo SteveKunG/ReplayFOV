@@ -25,7 +25,7 @@ import com.replaymod.replaystudio.util.Location;
 import com.replaymod.simplepathing.ReplayModSimplePathing;
 import com.replaymod.simplepathing.SPTimeline;
 import com.stevekung.replayfov.FovPositionKeyframe;
-import com.stevekung.replayfov.ReplayFov;
+import com.stevekung.replayfov.ReplayFOV;
 
 @Mixin(value = SPTimeline.class, remap = false)
 public abstract class MixinSPTimeline implements FovPositionKeyframe
@@ -58,7 +58,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     @Overwrite
     public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        this.addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov, spectated);
+        this.addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFOV.fov, spectated);
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     @Overwrite
     public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll)
     {
-        return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov);
+        return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFOV.fov);
     }
 
     @Override
@@ -82,7 +82,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
         var change = UpdateKeyframeProperties.create(this.positionPath, keyframe)
                 .setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ))
                 .setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll))
-                .setValue(ReplayFov.FOV, Triple.of(fov, fov, fov))
+                .setValue(ReplayFOV.FOV, Triple.of(fov, fov, fov))
                 .done();
         change.apply(this.timeline);
         return change;
@@ -101,7 +101,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
         var builder = UpdateKeyframeProperties.create(path, keyframe);
         builder.setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ));
         builder.setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll));
-        builder.setValue(ReplayFov.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
+        builder.setValue(ReplayFOV.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
 
         if (spectated != -1)
         {
@@ -178,7 +178,7 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
                     changes.add(UpdateKeyframeProperties.create(this.positionPath, keyframe)
                             .setValue(CameraProperties.POSITION, Triple.of(expected.getX(), expected.getY(), expected.getZ()))
                             .setValue(CameraProperties.ROTATION, Triple.of(expected.getYaw(), expected.getPitch(), 0f))
-                            .setValue(ReplayFov.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get()))), 0f, 0f)).done());
+                            .setValue(ReplayFOV.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get()))), 0f, 0f)).done());
                 }
             }
         }
@@ -188,12 +188,12 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     @Inject(method = "registerPositionInterpolatorProperties", at = @At("TAIL"))
     private void registerPositionInterpolatorProperties(Interpolator interpolator, CallbackInfoReturnable<Interpolator> info)
     {
-        interpolator.registerProperty(ReplayFov.FOV);
+        interpolator.registerProperty(ReplayFOV.FOV);
     }
 
     @Inject(method = "createTimelineStatic", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void createTimelineStatic(CallbackInfoReturnable<Timeline> info, Timeline timeline)
     {
-        timeline.registerProperty(ReplayFov.FOV);
+        timeline.registerProperty(ReplayFOV.FOV);
     }
 }
