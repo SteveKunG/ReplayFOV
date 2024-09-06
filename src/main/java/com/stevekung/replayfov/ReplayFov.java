@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import javax.annotation.Nonnull;
-
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.replaymod.lib.org.apache.commons.lang3.tuple.Triple;
@@ -14,6 +12,9 @@ import com.replaymod.replay.ReplayHandler;
 import com.replaymod.replaystudio.pathing.property.AbstractProperty;
 import com.replaymod.replaystudio.pathing.property.PropertyPart;
 import com.replaymod.replaystudio.pathing.property.PropertyParts;
+import com.stevekung.replayfov.extender.CameraEntityExtender;
+
+import javax.annotation.Nonnull;
 
 public class ReplayFov
 {
@@ -55,7 +56,7 @@ public class ReplayFov
                 {
                     fov = Math.toDegrees(Math.atan(1 / value.getLeft()));
                 }
-                ((FovCamera)cameraEntity).setFov((float) fov);
+                ((CameraEntityExtender) cameraEntity).setFov((float) fov);
             }
         }
 

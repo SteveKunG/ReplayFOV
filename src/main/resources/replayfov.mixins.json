@@ -1,12 +1,14 @@
 {
     "required": true,
-    "minVersion": "0.8.4",
+    "minVersion": "0.8.7",
     "package": "com.stevekung.replayfov.mixin",
     "compatibilityLevel": "JAVA_16",
     "client": [
         "MixinCameraEntity",
-        "MixinGuiMarkerTimeline",
+        "MixinGuiEditKeyframe_Position",
+        "MixinGuiEditMarkerPopup",
         "MixinGuiPathing",
+        "MixinMarker",
         "MixinSPTimeline"
     ],
     "injectors": {

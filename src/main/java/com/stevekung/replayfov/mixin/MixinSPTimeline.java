@@ -10,30 +10,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.replaymod.core.versions.MCVer;
 import com.replaymod.lib.org.apache.commons.lang3.tuple.Triple;
 import com.replaymod.pathing.properties.CameraProperties;
 import com.replaymod.pathing.properties.SpectatorProperty;
-import com.replaymod.pathing.properties.TimestampProperty;
 import com.replaymod.replaystudio.pathing.change.*;
 import com.replaymod.replaystudio.pathing.interpolation.Interpolator;
+import com.replaymod.replaystudio.pathing.path.Keyframe;
 import com.replaymod.replaystudio.pathing.path.Path;
+import com.replaymod.replaystudio.pathing.path.PathSegment;
 import com.replaymod.replaystudio.pathing.path.Timeline;
-import com.replaymod.replaystudio.util.EntityPositionTracker;
-import com.replaymod.replaystudio.util.Location;
 import com.replaymod.simplepathing.ReplayModSimplePathing;
 import com.replaymod.simplepathing.SPTimeline;
-import com.stevekung.replayfov.FovPositionKeyframe;
 import com.stevekung.replayfov.ReplayFov;
+import com.stevekung.replayfov.extender.SPTimelineExtender;
 
 @Mixin(value = SPTimeline.class, remap = false)
-public abstract class MixinSPTimeline implements FovPositionKeyframe
+public abstract class MixinSPTimeline implements SPTimelineExtender
 {
-    @Shadow
-    @Final
-    Path timePath;
-
     @Shadow
     @Final
     Path positionPath;
@@ -43,13 +38,13 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     Timeline timeline;
 
     @Shadow
-    EntityPositionTracker entityTracker;
-
-    @Shadow
     abstract Interpolator createDefaultInterpolator();
 
     @Shadow
     abstract Change updateInterpolators();
+
+    @Shadow
+    abstract Change updateSpectatorPositions();
 
     /**
      * @author SteveKunG
@@ -72,117 +67,86 @@ public abstract class MixinSPTimeline implements FovPositionKeyframe
     }
 
     @Override
+    @SuppressWarnings("all")
     public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov)
     {
-        ReplayModSimplePathing.LOGGER.debug("Updating position keyframe at {} to pos {}/{}/{} rot {}/{}/{} fov {}", time, posX, posY, posZ, yaw, pitch, roll, fov);
-        var keyframe = this.positionPath.getKeyframe(time);
+        //@formatter:off
+        ReplayModSimplePathing.LOGGER.debug("Updating position keyframe at {} to pos {}/{}/{} rot {}/{}/{} fov {}",
+                time, posX, posY, posZ, yaw, pitch, roll, fov);
+
+        Keyframe keyframe = positionPath.getKeyframe(time);
+
         Preconditions.checkState(keyframe != null, "Keyframe does not exists");
         Preconditions.checkState(!keyframe.getValue(SpectatorProperty.PROPERTY).isPresent(), "Cannot update spectator keyframe");
 
-        var change = UpdateKeyframeProperties.create(this.positionPath, keyframe)
+        Change change = UpdateKeyframeProperties.create(positionPath, keyframe)
                 .setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ))
                 .setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll))
                 .setValue(ReplayFov.FOV, Triple.of(fov, fov, fov))
                 .done();
-        change.apply(this.timeline);
+        change.apply(timeline);
         return change;
+        //@formatter:on
     }
 
     @Override
+    @SuppressWarnings("all")
     public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated)
     {
-        ReplayModSimplePathing.LOGGER.debug("Adding position keyframe at {} pos {}/{}/{} rot {}/{}/{} fov {} entId {}", time, posX, posY, posZ, yaw, pitch, roll, fov, spectated);
-        var path = this.positionPath;
-        Preconditions.checkState(this.positionPath.getKeyframe(time) == null, "Keyframe already exists");
+        //@formatter:off
+        ReplayModSimplePathing.LOGGER.debug("Adding position keyframe at {} pos {}/{}/{} rot {}/{}/{} fov {} entId {}",
+                time, posX, posY, posZ, yaw, pitch, roll, fov, spectated);
+
+        Path path = positionPath;
+
+        Preconditions.checkState(positionPath.getKeyframe(time) == null, "Keyframe already exists");
 
         Change change = AddKeyframe.create(path, time);
-        change.apply(this.timeline);
-        var keyframe = path.getKeyframe(time);
-        var builder = UpdateKeyframeProperties.create(path, keyframe);
+        change.apply(timeline);
+        Keyframe keyframe = path.getKeyframe(time);
+
+        UpdateKeyframeProperties.Builder builder = UpdateKeyframeProperties.create(path, keyframe);
         builder.setValue(CameraProperties.POSITION, Triple.of(posX, posY, posZ));
         builder.setValue(CameraProperties.ROTATION, Triple.of(yaw, pitch, roll));
+        // Add FOV
         builder.setValue(ReplayFov.FOV, Triple.of((float) (1 / Math.tan(Math.toRadians(fov))), 0f, 0f));
-
-        if (spectated != -1)
-        {
+        if (spectated != -1) {
             builder.setValue(SpectatorProperty.PROPERTY, spectated);
         }
-
-        var updateChange = builder.done();
-        updateChange.apply(this.timeline);
+        UpdateKeyframeProperties updateChange = builder.done();
+        updateChange.apply(timeline);
         change = CombinedChange.createFromApplied(change, updateChange);
 
         // If this new keyframe formed the first segment of the path
-        if (path.getSegments().size() == 1)
-        {
+        if (path.getSegments().size() == 1) {
             // then create an initial interpolator of default type
-            var segment = path.getSegments().iterator().next();
-            var interpolator = this.createDefaultInterpolator();
-            var setInterpolator = SetInterpolator.create(segment, interpolator);
-            setInterpolator.apply(this.timeline);
+            PathSegment segment = path.getSegments().iterator().next();
+            Interpolator interpolator = createDefaultInterpolator();
+            SetInterpolator setInterpolator = SetInterpolator.create(segment, interpolator);
+            setInterpolator.apply(timeline);
             change = CombinedChange.createFromApplied(change, setInterpolator);
         }
 
         // Update interpolators for spectator keyframes
         // while this is overkill, it is far simpler than updating differently for every possible case
-        change = CombinedChange.createFromApplied(change, this.updateInterpolators());
+        change = CombinedChange.createFromApplied(change, updateInterpolators());
 
-        var specPosUpdate = this.updateSpectatorPositions();
-        specPosUpdate.apply(this.timeline);
+        Change specPosUpdate = updateSpectatorPositions();
+        specPosUpdate.apply(timeline);
         change = CombinedChange.createFromApplied(change, specPosUpdate);
 
-        this.timeline.pushChange(change);
+        timeline.pushChange(change);
+        //@formatter:on
     }
 
-    /**
-     * @author SteveKunG
-     * @reason Add FOV
-     */
-    @Overwrite
-    private Change updateSpectatorPositions()
+    @ModifyExpressionValue(method = "updateSpectatorPositions", at = @At(value = "INVOKE", target = "com/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder.done()Lcom/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties;"))
+    private UpdateKeyframeProperties addFov(UpdateKeyframeProperties.Builder builder)
     {
-        if (this.entityTracker == null)
-        {
-            return CombinedChange.create();
-        }
-
-        var changes = Lists.<Change>newArrayList();
-        this.timePath.updateAll();
-
-        for (var keyframe : this.positionPath.getKeyframes())
-        {
-            var spectator = keyframe.getValue(SpectatorProperty.PROPERTY);
-
-            if (spectator.isPresent())
-            {
-                var time = this.timePath.getValue(TimestampProperty.PROPERTY, keyframe.getTime());
-
-                if (!time.isPresent())
-                {
-                    continue; // No time keyframes set at this video time, cannot determine replay time
-                }
-
-                var expected = this.entityTracker.getEntityPositionAtTimestamp(spectator.get(), time.get());
-
-                if (expected == null)
-                {
-                    continue; // We don't have any data on this entity for some reason
-                }
-
-                var pos = keyframe.getValue(CameraProperties.POSITION).orElse(Triple.of(0D, 0D, 0D));
-                var rot = keyframe.getValue(CameraProperties.ROTATION).orElse(Triple.of(0F, 0F, 0F));
-                var actual = new Location(pos.getLeft(), pos.getMiddle(), pos.getRight(), rot.getLeft(), rot.getRight());
-
-                if (!expected.equals(actual))
-                {
-                    changes.add(UpdateKeyframeProperties.create(this.positionPath, keyframe)
-                            .setValue(CameraProperties.POSITION, Triple.of(expected.getX(), expected.getY(), expected.getZ()))
-                            .setValue(CameraProperties.ROTATION, Triple.of(expected.getYaw(), expected.getPitch(), 0f))
-                            .setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov)), 0f, 0f)).done());
-                }
-            }
-        }
-        return CombinedChange.create(changes.toArray(new Change[changes.size()]));
+        //@formatter:off
+        return builder
+                .setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov)), 0f, 0f))
+                .done();
+        //@formatter:on
     }
 
     @Inject(method = "registerPositionInterpolatorProperties", at = @At("TAIL"))
