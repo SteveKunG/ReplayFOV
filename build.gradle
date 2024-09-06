@@ -24,7 +24,6 @@ repositories {
 
 dependencies {
     modImplementation "com.replaymod:replaymod-${minecraft_version}:${replay_version}"
-    implementation(include("com.udojava:EvalEx:${eval_ex_version}"))
 }
 
 String fileName = "${archives_base_name}-mc${supported_minecraft_version}"
