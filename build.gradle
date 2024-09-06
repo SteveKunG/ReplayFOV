@@ -5,7 +5,18 @@ plugins {
 apply from: "https://raw.githubusercontent.com/SteveKunG/GradleScripts/main/fabric.gradle"
 
 loom {
+    runs.configureEach {
+        properties project.commonProperties
+        vmArgs project.commonVmArgs
+        vmArgs project.hotswapVmArgs
+    }
+
     runs {
+        client {
+            if (project.hasProperty("devauth_dir")) {
+                property "devauth.configDir", "${devauth_dir}"
+            }
+        }
         server {
             ideConfigGenerated = false
         }

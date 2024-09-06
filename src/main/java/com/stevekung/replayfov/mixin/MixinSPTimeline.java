@@ -139,14 +139,10 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
         //@formatter:on
     }
 
-    @ModifyExpressionValue(method = "updateSpectatorPositions", at = @At(value = "INVOKE", target = "com/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder.done()Lcom/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties;"))
-    private UpdateKeyframeProperties addFov(UpdateKeyframeProperties.Builder builder)
+    @ModifyExpressionValue(method = "updateSpectatorPositions", at = @At(value = "INVOKE", target = "com/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder.setValue(Lcom/replaymod/replaystudio/pathing/property/Property;Ljava/lang/Object;)Lcom/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder;"))
+    private UpdateKeyframeProperties.Builder addFov(UpdateKeyframeProperties.Builder builder)
     {
-        //@formatter:off
-        return builder
-                .setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov)), 0f, 0f))
-                .done();
-        //@formatter:on
+        return builder.setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov)), 0f, 0f));
     }
 
     @Inject(method = "registerPositionInterpolatorProperties", at = @At("TAIL"))
