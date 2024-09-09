@@ -1,7 +1,5 @@
 package com.stevekung.replayfov.mixin;
 
-import java.text.DecimalFormat;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -9,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.replaymod.lib.de.johni0702.minecraft.gui.element.GuiElement;
@@ -31,10 +30,7 @@ public abstract class MixinGuiEditKeyframe_Position extends GuiEditKeyframe<GuiE
     }
 
     @Unique
-    private final GuiNumberField fovField = new GuiNumberField().setPrecision(0).setValidateOnFocusChange(true).setSize(60, 20).setPrecision(5);
-
-    @Unique
-    private final DecimalFormat df = new DecimalFormat("###.#####");
+    private final GuiNumberField fovField = new GuiNumberField().setValidateOnFocusChange(true).setSize(60, 20).setPrecision(5);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setFovTextField(GuiPathing gui, SPTimeline.SPPath path, long keyframe, CallbackInfo info)
@@ -52,7 +48,7 @@ public abstract class MixinGuiEditKeyframe_Position extends GuiEditKeyframe<GuiE
                 fov = Math.toDegrees(Math.atan(1 / val.getLeft()));
             }
 
-            this.fovField.setText(this.df.format(fov));
+            this.fovField.setValue(fov);
         });
     }
 

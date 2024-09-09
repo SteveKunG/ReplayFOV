@@ -80,8 +80,7 @@ public class MixinGuiEditMarkerPopup implements GuiEditMarkerPopupExtender
                 .with(this.zField, new GridLayout.Data(1.0, 0.5)).with(new GuiLabel().setI18nText("replaymod.gui.editkeyframe.camyaw"), new GridLayout.Data(0.0, 0.5))
                 .with(this.yawField, new GridLayout.Data(1.0, 0.5)).with(new GuiLabel().setI18nText("replaymod.gui.editkeyframe.campitch"), new GridLayout.Data(0.0, 0.5))
                 .with(this.pitchField, new GridLayout.Data(1.0, 0.5)).with(new GuiLabel().setI18nText("replaymod.gui.editkeyframe.camroll"), new GridLayout.Data(0.0, 0.5))
-                .with(this.rollField, new GridLayout.Data(1.0, 0.5))
-                .with(new GuiLabel().setI18nText("replaymod.gui.editkeyframe.fov"), new GridLayout.Data(0, 0.5))
+                .with(this.rollField, new GridLayout.Data(1.0, 0.5)).with(new GuiLabel().setI18nText("replaymod.gui.editkeyframe.fov"), new GridLayout.Data(0, 0.5))
                 .with(this.fovField, new GridLayout.Data(1, 0.5))
                 .build();
         //@formatter:on
