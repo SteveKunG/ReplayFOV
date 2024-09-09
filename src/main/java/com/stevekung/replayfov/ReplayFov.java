@@ -16,11 +16,11 @@ import com.stevekung.replayfov.extender.CameraEntityExtender;
 
 import javax.annotation.Nonnull;
 
-public class ReplayFov
+public interface ReplayFov
 {
-    public static final Fov FOV = new Fov();
+    Fov FOV = new Fov();
 
-    public static class Fov extends AbstractProperty<Triple<Float, Float, Float>>
+    class Fov extends AbstractProperty<Triple<Float, Float, Float>>
     {
         private final PropertyPart<Triple<Float, Float, Float>> FOV = new PropertyParts.ForFloatTriple(this, true, PropertyParts.TripleElement.LEFT);
         private final PropertyPart<Triple<Float, Float, Float>> A = new PropertyParts.ForFloatTriple(this, true, PropertyParts.TripleElement.MIDDLE);
