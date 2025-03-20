@@ -4,7 +4,9 @@
     "package": "com.stevekung.replayfov.mixin",
     "compatibilityLevel": "JAVA_16",
     "client": [
+        "MixinCamera",
         "MixinCameraEntity",
+        "MixinGameRenderer",
         "MixinGuiEditKeyframe_Position",
         "MixinGuiEditMarkerPopup",
         "MixinGuiEditMarkerPopup$OnSave",
