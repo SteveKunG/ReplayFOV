@@ -85,11 +85,11 @@ public class MixinGuiEditMarkerPopup implements GuiEditMarkerPopupExtender
                 .build();
         //@formatter:on
 
-        this.fovField.setValue(MarkerExtender.class.cast(marker).getFov());
+        this.fovField.setValue(MarkerExtender.class.cast(marker).replayfov$getFov());
     }
 
     @Override
-    public GuiNumberField getFovField()
+    public GuiNumberField replayfov$getFovField()
     {
         return this.fovField;
     }
@@ -104,7 +104,7 @@ public class MixinGuiEditMarkerPopup implements GuiEditMarkerPopupExtender
         @Inject(method = "run", at = @At(value = "INVOKE", target = "java/util/function/Consumer.accept(Ljava/lang/Object;)V"))
         private void run(CallbackInfo info, @Local Marker marker)
         {
-            MarkerExtender.class.cast(marker).setFov(((GuiEditMarkerPopupExtender) this.this$0).getFovField().getFloat());
+            MarkerExtender.class.cast(marker).replayfov$setFov(((GuiEditMarkerPopupExtender) this.this$0).replayfov$getFovField().getFloat());
         }
     }
 }

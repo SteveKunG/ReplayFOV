@@ -56,7 +56,7 @@ public interface ReplayFov
                 {
                     fov = Math.toDegrees(Math.atan(1 / value.getLeft()));
                 }
-                ((CameraEntityExtender) cameraEntity).setFov((float) fov);
+                ((CameraEntityExtender) cameraEntity).replayfov$setFov((float) fov);
             }
         }
 

@@ -55,7 +55,7 @@ public abstract class MixinGuiEditKeyframe_Position extends GuiEditKeyframe<GuiE
     @WrapOperation(method = "save", at = @At(value = "INVOKE", target = "com/replaymod/simplepathing/SPTimeline.updatePositionKeyframe(JDDDFFF)Lcom/replaymod/replaystudio/pathing/change/Change;"))
     private Change updatePositionKeyframeWithFov(SPTimeline spTimeline, long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, Operation<Change> operation)
     {
-        return ((SPTimelineExtender) spTimeline).updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) (1 / Math.tan(Math.toRadians(this.fovField.setPrecision(11).getFloat()))));
+        return ((SPTimelineExtender) spTimeline).replayfov$updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) (1 / Math.tan(Math.toRadians(this.fovField.setPrecision(11).getFloat()))));
     }
 
     @ModifyArg(method = "<init>", at = @At(

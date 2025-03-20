@@ -4,7 +4,7 @@ import com.replaymod.replaystudio.pathing.change.Change;
 
 public interface SPTimelineExtender
 {
-    void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated);
+    void replayfov$addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated);
 
-    Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov);
+    Change replayfov$updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov);
 }

@@ -7,5 +7,5 @@ public interface CameraEntityExtender
      *
      * @param fov The fov to set
      */
-    void setFov(Float fov);
+    void replayfov$setFov(Float fov);
 }

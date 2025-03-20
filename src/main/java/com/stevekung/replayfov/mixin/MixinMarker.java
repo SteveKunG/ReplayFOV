@@ -38,13 +38,13 @@ public class MixinMarker implements MarkerExtender
     private float fov;
 
     @Override
-    public float getFov()
+    public float replayfov$getFov()
     {
         return this.fov;
     }
 
     @Override
-    public void setFov(float fov)
+    public void replayfov$setFov(float fov)
     {
         this.fov = fov;
     }
@@ -65,7 +65,7 @@ public class MixinMarker implements MarkerExtender
         if (Float.compare(marker.getYaw(), yaw) != 0) return false;
         if (Float.compare(marker.getPitch(), pitch) != 0) return false;
         if (Float.compare(marker.getRoll(), roll) != 0) return false;
-        if (Float.compare(MarkerExtender.class.cast(marker).getFov(), this.fov) != 0) return false;
+        if (Float.compare(MarkerExtender.class.cast(marker).replayfov$getFov(), this.fov) != 0) return false;
         return !(name != null ? !name.equals(marker.getName()) : marker.getName() != null);
     }
 

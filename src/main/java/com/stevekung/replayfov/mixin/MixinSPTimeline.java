@@ -53,7 +53,7 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
     @Overwrite
     public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        this.addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
+        this.replayfov$addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
     }
 
     /**
@@ -63,12 +63,12 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
     @Overwrite
     public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll)
     {
-        return this.updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov);
+        return this.replayfov$updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov);
     }
 
     @Override
     @SuppressWarnings("all")
-    public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov)
+    public Change replayfov$updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov)
     {
         //@formatter:off
         ReplayModSimplePathing.LOGGER.debug("Updating position keyframe at {} to pos {}/{}/{} rot {}/{}/{} fov {}",
@@ -91,7 +91,7 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
 
     @Override
     @SuppressWarnings("all")
-    public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated)
+    public void replayfov$addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, float fov, int spectated)
     {
         //@formatter:off
         ReplayModSimplePathing.LOGGER.debug("Adding position keyframe at {} pos {}/{}/{} rot {}/{}/{} fov {} entId {}",

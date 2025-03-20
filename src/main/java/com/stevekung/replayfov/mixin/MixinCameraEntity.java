@@ -10,7 +10,7 @@ import com.stevekung.replayfov.extender.CameraEntityExtender;
 public class MixinCameraEntity implements CameraEntityExtender
 {
     @Override
-    public void setFov(Float fov)
+    public void replayfov$setFov(Float fov)
     {
         MCVer.getMinecraft().options.fov = fov;
         MCVer.getMinecraft().levelRenderer.needsUpdate();

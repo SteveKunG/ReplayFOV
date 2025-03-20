@@ -11,11 +11,11 @@ import com.replaymod.simplepathing.gui.GuiPathing;
 import com.stevekung.replayfov.extender.SPTimelineExtender;
 
 @Mixin(value = GuiPathing.class, remap = false)
-public abstract class MixinGuiPathing
+public class MixinGuiPathing
 {
     @WrapOperation(method = "toggleKeyframe", at = @At(value = "INVOKE", target = "com/replaymod/simplepathing/SPTimeline.addPositionKeyframe(JDDDFFFI)V"))
     private void newMarkerPopup(SPTimeline timeline, long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated, Operation<Void> operation)
     {
-        ((SPTimelineExtender) timeline).addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
+        ((SPTimelineExtender) timeline).replayfov$addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
     }
 }

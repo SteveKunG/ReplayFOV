@@ -2,7 +2,7 @@ package com.stevekung.replayfov.extender;
 
 public interface MarkerExtender
 {
-    float getFov();
+    float replayfov$getFov();
 
-    void setFov(float fov);
+    void replayfov$setFov(float fov);
 }
