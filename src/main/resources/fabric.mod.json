@@ -10,12 +10,17 @@
     ],
     "license": "GPL-3.0",
     "environment": "client",
+    "entrypoints": {
+        "client": [
+            "com.stevekung.replayfov.ReplayFov"
+        ]
+    },
     "mixins": [
         "replayfov.mixins.json"
     ],
     "depends": {
         "fabricloader": ">=0.16",
         "replaymod": "*",
-        "minecraft": ">=1.17 <=1.18.2"
+        "minecraft": "1.19.2"
     }
 }

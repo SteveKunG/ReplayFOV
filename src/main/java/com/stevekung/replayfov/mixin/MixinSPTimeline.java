@@ -53,7 +53,7 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
     @Overwrite
     public void addPositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll, int spectated)
     {
-        this.replayfov$addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov, spectated);
+        this.replayfov$addPositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov, spectated);
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
     @Overwrite
     public Change updatePositionKeyframe(long time, double posX, double posY, double posZ, float yaw, float pitch, float roll)
     {
-        return this.replayfov$updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, (float) MCVer.getMinecraft().options.fov);
+        return this.replayfov$updatePositionKeyframe(time, posX, posY, posZ, yaw, pitch, roll, ReplayFov.fov);
     }
 
     @Override
@@ -142,7 +142,7 @@ public abstract class MixinSPTimeline implements SPTimelineExtender
     @ModifyExpressionValue(method = "updateSpectatorPositions", at = @At(value = "INVOKE", target = "com/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder.setValue(Lcom/replaymod/replaystudio/pathing/property/Property;Ljava/lang/Object;)Lcom/replaymod/replaystudio/pathing/change/UpdateKeyframeProperties$Builder;"))
     private UpdateKeyframeProperties.Builder addFov(UpdateKeyframeProperties.Builder builder)
     {
-        return builder.setValue(ReplayFov.FOV, Triple.of((float) Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov)), 0f, 0f));
+        return builder.setValue(ReplayFov.FOV, Triple.of((float)(1 / Math.tan(Math.toRadians(MCVer.getMinecraft().options.fov().get()))), 0f, 0f));
     }
 
     @Inject(method = "registerPositionInterpolatorProperties", at = @At("TAIL"))

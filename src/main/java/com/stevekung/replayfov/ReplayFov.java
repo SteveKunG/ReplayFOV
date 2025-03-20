@@ -9,18 +9,24 @@ import com.google.gson.stream.JsonWriter;
 import com.replaymod.lib.org.apache.commons.lang3.tuple.Triple;
 import com.replaymod.pathing.properties.CameraProperties;
 import com.replaymod.replay.ReplayHandler;
+import com.replaymod.replay.ReplayModReplay;
 import com.replaymod.replaystudio.pathing.property.AbstractProperty;
 import com.replaymod.replaystudio.pathing.property.PropertyPart;
 import com.replaymod.replaystudio.pathing.property.PropertyParts;
 import com.stevekung.replayfov.extender.CameraEntityExtender;
 
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+
 import javax.annotation.Nonnull;
 
-public interface ReplayFov
+public class ReplayFov implements ClientModInitializer
 {
-    Fov FOV = new Fov();
+    public static final Fov FOV = new Fov();
 
-    class Fov extends AbstractProperty<Triple<Float, Float, Float>>
+    public static Float fov;
+
+    public static class Fov extends AbstractProperty<Triple<Float, Float, Float>>
     {
         private final PropertyPart<Triple<Float, Float, Float>> FOV = new PropertyParts.ForFloatTriple(this, true, PropertyParts.TripleElement.LEFT);
         private final PropertyPart<Triple<Float, Float, Float>> A = new PropertyParts.ForFloatTriple(this, true, PropertyParts.TripleElement.MIDDLE);
@@ -80,5 +86,17 @@ public interface ReplayFov
                 reader.endArray();
             }
         }
+    }
+
+    @Override
+    public void onInitializeClient()
+    {
+        ClientTickEvents.START_CLIENT_TICK.register(mc ->
+        {
+            if (ReplayModReplay.instance.getReplayHandler() == null && fov != null)
+            {
+                fov = null;
+            }
+        });
     }
 }
