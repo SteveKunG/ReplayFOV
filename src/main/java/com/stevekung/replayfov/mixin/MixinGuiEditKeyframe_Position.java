@@ -24,13 +24,13 @@ import com.stevekung.replayfov.extender.SPTimelineExtender;
 @Mixin(value = GuiEditKeyframe.Position.class, remap = false)
 public abstract class MixinGuiEditKeyframe_Position extends GuiEditKeyframe<GuiEditKeyframe.Position>
 {
+    @Unique
+    private final GuiNumberField fovField = new GuiNumberField().setValidateOnFocusChange(true).setSize(60, 20).setPrecision(5);
+
     MixinGuiEditKeyframe_Position()
     {
         super(null, null, 0, null);
     }
-
-    @Unique
-    private final GuiNumberField fovField = new GuiNumberField().setValidateOnFocusChange(true).setSize(60, 20).setPrecision(5);
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setFovTextField(GuiPathing gui, SPTimeline.SPPath path, long keyframe, CallbackInfo info)
